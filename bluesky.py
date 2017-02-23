@@ -16,14 +16,14 @@ def run_game():
 	# Make a ship.
 	ship = Ship(bs_settings, screen)
 	# Make a group to store bullets into. 
-	#bullets = Group()
+	bullets = Group()
 
 	# Start the main loop for the game. 
 	while True: 
-		gf.check_events(ship) #bullets)	
+		gf.check_events(bs_settings, screen, ship, bullets)
 		ship.update()
-		#gf.update_bullets(bullets)	
-		gf.update_screen(bs_settings, screen, ship) # bullets)
+		gf.update_bullets(bullets)	
+		gf.update_screen(bs_settings, screen, ship, bullets)
 
 
 run_game()

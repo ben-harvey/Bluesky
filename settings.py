@@ -5,7 +5,7 @@ class Settings():
 		"""Initialize the game's settings."""
 		
 		# Ship settings
-		self.ship_speed_factor = 4
+		self.ship_speed_factor = 10
 
 		# Screen settings
 		self.screen_width = 1200

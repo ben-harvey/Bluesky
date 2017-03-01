@@ -17,6 +17,8 @@ def check_keydown_events(event, bs_settings, ship, screen, bullets):
 		ship.moving_down = True
 	elif event.key == pygame.K_SPACE:
 		fire_bullet(bs_settings, screen, ship, bullets)
+	elif event.key == pygame.K_q:
+			sys.exit()
 
 def fire_bullet(bs_settings, screen, ship, bullets):
 	"""Fire bullet if limit not reached yet."""
@@ -76,14 +78,14 @@ def update_bullets(bullets):
 
 def get_number_hot_dogs_x(bs_settings, hot_dog_width):
 	"""Determine the number of hot_dogs that fit in a row."""
-	available_space_x = bs_settings.screen_width - 2 * hot_dog_width
-	number_hot_dogs_x = int(available_space_x / (2 * hot_dog_width))
+	
+	number_hot_dogs_x = randint(1,4)
 	return number_hot_dogs_x
 
 def get_number_rows(bs_settings, ship_height, hot_dog_height):
 	"""Determine the number of rows of hot_dogs that fit on the screen."""
 	available_space_y = (bs_settings.screen_height -
-							(3 * hot_dog_height) - ship_height)
+							(2 * hot_dog_height) - ship_height)
 	number_rows = int(available_space_y / (2 * hot_dog_height))
 	return number_rows
 
@@ -92,9 +94,10 @@ def create_hot_dog(bs_settings, screen, hot_dogs, hot_dog_number, row_number):
 	"""Create an hot_dog and place it in a row."""
 	hot_dog = Hotdog(bs_settings, screen)
 	hot_dog_width = hot_dog.rect.width
-	hot_dog.x = hot_dog_width + 2 * hot_dog_width * hot_dog_number
+	available_space_x = bs_settings.screen_width
+	hot_dog.x = randint(0, available_space_x)
 	hot_dog.rect.x = hot_dog.x
-	hot_dog.rect.y = hot_dog.rect.height + 2 * hot_dog.rect.height * row_number
+	hot_dog.rect.y = hot_dog.rect.height + 3 * hot_dog.rect.height * row_number
 	hot_dogs.add(hot_dog)
 
 def create_fleet(bs_settings, screen, ship, hot_dogs):

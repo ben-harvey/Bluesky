@@ -1,6 +1,6 @@
 import pygame
 from pygame.sprite import Sprite
-from random import randint
+import random
 
 
 class Hotdog(Sprite):
@@ -25,7 +25,9 @@ class Hotdog(Sprite):
 		self.y = float(self.rect.y)
 
 		# Randomize the hot dog's direction.
-		self.direction = [randint(1,4)]
+		numbers =  [x for x in range(-4, 4) if x != 0]
+		self.direction = random.choice(numbers)
+		print(self.direction)
 
 	def blitme(self):
 		"""Draw the hot dog at its current location."""
@@ -47,23 +49,28 @@ class Hotdog(Sprite):
 	def update(self):
 		"""Move the hot dog."""
 		self.speed = self.bs_settings.hot_dog_speed_factor 
-		# self.direction.append(randint(1,4))
+		self.direction_factor = self.bs_settings.hot_dog_direction_factor
 		
-		if 1 in self.direction:
-			self.y += 1 
-		elif 2 in self.direction:
-			self.y -= 1
-		elif 3 in self.direction:
-			self.x += 1
-		elif 4 in self.direction:
-			self.x -= 1	
-		self.rect.x = self.x * self.bs_settings.hot_dog_speed_factor
-		self.rect.y = self.y *  self.bs_settings.hot_dog_speed_factor
-		print(self.direction)
-		# self.x += randint(-1,   1) * self.speed
+		if self.direction == -4:
+			self.y += (1 * self.speed * self.direction_factor) 
+		elif self.direction == -3:
+			self.y -= (1 * self.speed * self.direction_factor)
+		elif self.direction == -2:
+			self.x += (1 * self.speed * self.direction_factor)
+		elif self.direction == -1:
+			self.x -= (1 * self.speed * self.direction_factor)
+		elif self.direction == 1:
+			self.y += (1 * self.speed * self.direction_factor)
+			self.x += (1 * self.speed * self.direction_factor)
+		elif self.direction == 2:
+			self.y -= (1 * self.speed * self.direction_factor)
+			self.x -= (1 * self.speed * self.direction_factor)
+		elif self.direction == 3:
+			self.x += (1 * self.speed * self.direction_factor)
+			self.y -= (1 * self.speed * self.direction_factor)
+		elif self.direction == 4:
+			self.x -= (1 * self.speed * self.direction_factor)
+			self.y += (1 * self.speed * self.direction_factor)
+		self.rect.x = self.x 
+		self.rect.y = self.y 
 		
-		
-		# self.y += randint(-1, 1) * self.speed
-							
-		# self.rect.x = self.x
-		# self.rect.y = self.y

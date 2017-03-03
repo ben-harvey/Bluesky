@@ -123,7 +123,7 @@ def check_fleet_edges(bs_settings, hot_dogs):
 def change_dog_direction(bs_settings, hot_dogs):
 	"""Change hot dog direction if it touches screen edge."""
 	for hot_dog in hot_dogs.sprites():
-		bs_settings.hot_dog_direction *= -1
+		bs_settings.hot_dog_direction_factor *= -1
 
 def update_hot_dogs(bs_settings, hot_dogs):
 	"""Check if dog is at screen edge, then update the position of all hot 

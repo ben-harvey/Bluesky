@@ -24,6 +24,9 @@ class Hotdog(Sprite):
 		self.x = float(self.rect.x)
 		self.y = float(self.rect.y)
 
+		# Randomize the hot dog's direction.
+		self.direction = [randint(1,4)]
+
 	def blitme(self):
 		"""Draw the hot dog at its current location."""
 		self.screen.blit(self.image, self.rect)
@@ -40,14 +43,27 @@ class Hotdog(Sprite):
 		elif self.rect.bottom >= screen_rect.bottom:
 			return True
 
+
 	def update(self):
 		"""Move the hot dog."""
 		self.speed = self.bs_settings.hot_dog_speed_factor 
+		# self.direction.append(randint(1,4))
 		
-		self.x += randint(-1, 1) * self.speed
+		if 1 in self.direction:
+			self.y += 1 
+		elif 2 in self.direction:
+			self.y -= 1
+		elif 3 in self.direction:
+			self.x += 1
+		elif 4 in self.direction:
+			self.x -= 1	
+		self.rect.x = self.x * self.bs_settings.hot_dog_speed_factor
+		self.rect.y = self.y *  self.bs_settings.hot_dog_speed_factor
+		print(self.direction)
+		# self.x += randint(-1,   1) * self.speed
 		
 		
-		self.y += randint(-1, 1) * self.speed
+		# self.y += randint(-1, 1) * self.speed
 							
-		self.rect.x = self.x
-		self.rect.y = self.y
+		# self.rect.x = self.x
+		# self.rect.y = self.y

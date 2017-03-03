@@ -24,7 +24,8 @@ class Hotdog(Sprite):
 		self.x = float(self.rect.x)
 		self.y = float(self.rect.y)
 
-		# Randomize the hot dog's direction.
+		# Store and randomize the hot dog's direction.
+		self.hot_dog_direction_factor = 1
 		numbers =  [x for x in range(-4, 4) if x != 0]
 		self.direction = random.choice(numbers)
 		print(self.direction)
@@ -49,7 +50,7 @@ class Hotdog(Sprite):
 	def update(self):
 		"""Move the hot dog."""
 		self.speed = self.bs_settings.hot_dog_speed_factor 
-		self.direction_factor = self.bs_settings.hot_dog_direction_factor
+		self.direction_factor = self.hot_dog_direction_factor
 		
 		if self.direction == -4:
 			self.y += (1 * self.speed * self.direction_factor) 

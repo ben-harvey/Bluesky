@@ -20,5 +20,5 @@ class Settings():
 		self.bullets_allowed = 3
 
 		# Hot dog settings
-		self.hot_dog_direction_factor = 1
-		self.hot_dog_speed_factor = .5
+		
+		self.hot_dog_speed_factor = 2

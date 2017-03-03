@@ -76,54 +76,49 @@ def update_bullets(bullets):
 		if bullet.rect.bottom <= 0:
 			bullets.remove(bullet)
 
-def get_number_hot_dogs_x(bs_settings, hot_dog_width):
-	"""Determine the number of hot_dogs that fit in a row."""
+# def get_number_hot_dogs_x(bs_settings, hot_dog_width):
+# 	"""Determine the number of hot_dogs that fit in a row."""
 	
-	number_hot_dogs_x = randint(1,4)
-	return number_hot_dogs_x
+# 	number_hot_dogs_x = randint(1,4)
+# 	return number_hot_dogs_x
 
-def get_number_rows(bs_settings, ship_height, hot_dog_height):
-	"""Determine the number of rows of hot_dogs that fit on the screen."""
-	available_space_y = (bs_settings.screen_height -
-							(2 * hot_dog_height) - ship_height)
-	number_rows = int(available_space_y / (2 * hot_dog_height))
-	return number_rows
+# def get_number_rows(bs_settings, ship_height, hot_dog_height):
+# 	"""Determine the number of rows of hot_dogs that fit on the screen."""
+# 	available_space_y = (bs_settings.screen_height -
+# 							(2 * hot_dog_height) - ship_height)
+# 	number_rows = int(available_space_y / (2 * hot_dog_height))
+# 	return number_rows
 
 
-def create_hot_dog(bs_settings, screen, hot_dogs): #hot_dog_number, row_number
-	"""Create an hot_dog and place it in a row."""
+def create_hot_dog(bs_settings, screen, hot_dogs): 
+	"""Create an hot_dog and place it randomly on the screen."""
 	hot_dog = Hotdog(bs_settings, screen)
 	hot_dog_width = hot_dog.rect.width
+	hot_dog_height = hot_dog.rect.height
 	available_space_x = bs_settings.screen_width
-	hot_dog.x = randint(0, available_space_x)
+	available_space_y = bs_settings.screen_height
+	hot_dog.x = randint(0, available_space_x - hot_dog_width)
+	hot_dog.y = randint(0, available_space_y - hot_dog_height)
 	hot_dog.rect.x = hot_dog.x
-	hot_dog.rect.y = hot_dog.y#hot_dog.rect.height + 3 * hot_dog.rect.height * row_number
+	hot_dog.rect.y = hot_dog.y
 	hot_dogs.add(hot_dog)
 
 def create_fleet(bs_settings, screen, ship, hot_dogs):
 	"""Create a full fleet of hot_dogs."""
-	# Create an hot_dog and find the number of hot_dogs in a row.
-	hot_dog = Hotdog(bs_settings, screen)
-	number_hot_dogs_x = get_number_hot_dogs_x(bs_settings, hot_dog.rect.width)
-	number_rows = get_number_rows(bs_settings, ship.rect.height, 
-		hot_dog.rect.height)
-	
-	# # Create the fleet of hot_dogs. 
-	# for row_number in range(number_rows):
-	# 	for hot_dog_number in range(number_hot_dogs_x):
-	create_hot_dog(bs_settings, screen, hot_dogs) #hot_dog_number, row_number
+	# hot_dog = Hotdog(bs_settings, screen)
+	for hot_dog in range(randint(8,15)):	
+		create_hot_dog(bs_settings, screen, hot_dogs) 
 
 def check_fleet_edges(bs_settings, hot_dogs):
 	"""Respond if any hot dogshave reached an edge."""
 	for hot_dog in hot_dogs.sprites():
 		if hot_dog.check_edges():
-			change_dog_direction(bs_settings, hot_dogs)
+			hot_dog.hot_dog_direction_factor *= -1
 			break
 
-def change_dog_direction(bs_settings, hot_dogs):
-	"""Change hot dog direction if it touches screen edge."""
-	for hot_dog in hot_dogs.sprites():
-		bs_settings.hot_dog_direction_factor *= -1
+# def change_dog_direction(bs_settings, hot_dogs):
+# 	"""Change hot dog direction if it touches screen edge."""
+# 	hot_dog.self.hot_dog_direction_factor *= -1
 
 def update_hot_dogs(bs_settings, hot_dogs):
 	"""Check if dog is at screen edge, then update the position of all hot 

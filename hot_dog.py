@@ -1,5 +1,7 @@
 import pygame
 from pygame.sprite import Sprite
+from random import randint
+
 
 class Hotdog(Sprite):
 	"""A class to represent a single hot dog in the fleet."""
@@ -20,7 +22,32 @@ class Hotdog(Sprite):
 
 		# Store the hot dog's exact position.
 		self.x = float(self.rect.x)
+		self.y = float(self.rect.y)
 
 	def blitme(self):
 		"""Draw the hot dog at its current location."""
 		self.screen.blit(self.image, self.rect)
+
+	def check_edges(self):
+		"""Return True if hot dog is at edge of screen."""
+		screen_rect = self.screen.get_rect()
+		if self.rect.right >= screen_rect.right:
+			return True
+		elif self.rect.left <= 0:
+			return True
+		elif self.rect.top <= 0:
+			return True
+		elif self.rect.bottom >= screen_rect.bottom:
+			return True
+
+	def update(self):
+		"""Move the hot dog."""
+		self.speed = self.bs_settings.hot_dog_speed_factor 
+		
+		self.x += randint(-1, 1) * self.speed
+		
+		
+		self.y += randint(-1, 1) * self.speed
+							
+		self.rect.x = self.x
+		self.rect.y = self.y

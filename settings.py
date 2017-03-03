@@ -18,3 +18,7 @@ class Settings():
 		self.bullet_height = 15
 		self.bullet_color = 60, 60, 60
 		self.bullets_allowed = 3
+
+		# Hot dog settings
+		self.hot_dog_direction = 1
+		self.hot_dog_speed_factor = 1

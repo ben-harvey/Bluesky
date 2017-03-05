@@ -6,6 +6,7 @@ class Settings():
 		
 		# Ship settings
 		self.ship_speed_factor = 10
+		self.ship_limit = 3
 
 		# Screen settings
 		self.screen_width = 1200

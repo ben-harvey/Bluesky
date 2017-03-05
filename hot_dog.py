@@ -3,12 +3,12 @@ from pygame.sprite import Sprite
 import random
 
 
-class Hotdog(Sprite):
+class Hotdog(pygame.sprite.Sprite):
 	"""A class to represent a single hot dog in the fleet."""
 
 	def __init__(self, bs_settings, screen):
 		"""Initialize the hot dog and set its starting position."""
-		super().__init__()
+		pygame.sprite.Sprite.__init__(self)
 		self.screen = screen
 		self.bs_settings = bs_settings
 

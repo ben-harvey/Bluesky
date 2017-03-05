@@ -1,11 +1,11 @@
 import sys
-from bullet import Bullet
 import pygame
 from hot_dog import Hotdog
 from random import randint
+from time import sleep
 
 
-def check_keydown_events(event, bs_settings, ship, screen, bullets):
+def check_keydown_events(event, bs_settings, ship, stats, screen, hot_dogs):
 
 	if event.key == pygame.K_RIGHT:
 		ship.moving_right = True
@@ -15,17 +15,10 @@ def check_keydown_events(event, bs_settings, ship, screen, bullets):
 		ship.moving_up = True
 	elif event.key == pygame.K_DOWN:
 		ship.moving_down = True
-	elif event.key == pygame.K_SPACE:
-		fire_bullet(bs_settings, screen, ship, bullets)
 	elif event.key == pygame.K_q:
 			sys.exit()
-
-def fire_bullet(bs_settings, screen, ship, bullets):
-	"""Fire bullet if limit not reached yet."""
-	# Create a new bullet and add to bullets group. 
-	if len(bullets) < bs_settings.bullets_allowed:
-		new_bullet = Bullet(bs_settings, screen, ship)
-		bullets.add(new_bullet)
+	elif event.key == pygame.K_p:
+		start_game(bs_settings, screen, stats, ship, hot_dogs)
 
 
 def check_keyup_events(event, ship):
@@ -41,54 +34,58 @@ def check_keyup_events(event, ship):
 
 
 
-def check_events(bs_settings, screen, ship, bullets):
+def check_events(bs_settings, screen, stats, play_button, ship, hot_dogs):
 	"""Respond to keypresses and mouse events."""
 	for event in pygame.event.get():
 		if event.type == pygame.QUIT:
 			sys.exit()
 		elif event.type == pygame.KEYDOWN:
-			check_keydown_events(event, bs_settings, ship, screen, bullets)
+			check_keydown_events(event, bs_settings, ship, stats, screen, hot_dogs)
 		elif event.type == pygame.KEYUP:
 			check_keyup_events(event, ship)
+		elif event.type == pygame.MOUSEBUTTONDOWN:
+			mouse_x, mouse_y = pygame.mouse.get_pos()
+			check_play_button(bs_settings, screen, stats, play_button, ship, 
+				hot_dogs, mouse_x, mouse_y)
 		
+def check_play_button(bs_settings, screen, stats, play_button, ship, hot_dogs, 
+	 mouse_x, mouse_y):
+	"""Start a new game when the player clicks play."""
+	button_clicked = play_button.rect.collidepoint(mouse_x, mouse_y)
+	if button_clicked and not stats.game_active:
+		start_game(bs_settings, screen, stats, ship, hot_dogs)
+
+def start_game(bs_settings, screen, stats, ship, hot_dogs):
+		# Hide the mouse cursor.
+		pygame.mouse.set_visible(False)
+
+		# Reset the game stats.
+		stats.reset_stats()
+		stats.game_active = True
+
+		# Empty the list of aliens. 
+		hot_dogs.empty()
 		
-		
-def update_screen(bs_settings, screen, ship, hot_dogs, bullets):
+
+		# Create new fleet and center ship.
+		create_fleet(bs_settings, screen, ship, hot_dogs)
+		ship.center_ship()
+
+
+def update_screen(bs_settings, screen, stats, ship, hot_dogs, play_button):
 	"""Update images on the screen and flip to a new screen."""	
 	
 	# Redraw the screen during each pass through the loop. 
 	screen.fill(bs_settings.bg_color)
-	for bullet in bullets.sprites():
-		bullet.draw_bullet()
 	ship.blitme()
 	hot_dogs.draw(screen)
 
+	# Draw play button if game is inactive.
+	if not stats.game_active:
+		play_button.draw_button()
+
 	# Make the most recently drawn screen visible. 
 	pygame.display.flip()
-
-def update_bullets(bullets):
-	"""Update position of bullets and get rid of old bullets."""
-	# Update bullet positions.
-	bullets.update()
-
-	# Get rid of bullets that have left the screen.
-	for bullet in bullets.copy():
-		if bullet.rect.bottom <= 0:
-			bullets.remove(bullet)
-
-# def get_number_hot_dogs_x(bs_settings, hot_dog_width):
-# 	"""Determine the number of hot_dogs that fit in a row."""
-	
-# 	number_hot_dogs_x = randint(1,4)
-# 	return number_hot_dogs_x
-
-# def get_number_rows(bs_settings, ship_height, hot_dog_height):
-# 	"""Determine the number of rows of hot_dogs that fit on the screen."""
-# 	available_space_y = (bs_settings.screen_height -
-# 							(2 * hot_dog_height) - ship_height)
-# 	number_rows = int(available_space_y / (2 * hot_dog_height))
-# 	return number_rows
-
 
 def create_hot_dog(bs_settings, screen, hot_dogs): 
 	"""Create an hot_dog and place it randomly on the screen."""
@@ -110,19 +107,48 @@ def create_fleet(bs_settings, screen, ship, hot_dogs):
 		create_hot_dog(bs_settings, screen, hot_dogs) 
 
 def check_fleet_edges(bs_settings, hot_dogs):
-	"""Respond if any hot dogshave reached an edge."""
+	"""Respond if any hot dogs have reached an edge."""
 	for hot_dog in hot_dogs.sprites():
 		if hot_dog.check_edges():
 			hot_dog.hot_dog_direction_factor *= -1
 			break
 
-# def change_dog_direction(bs_settings, hot_dogs):
-# 	"""Change hot dog direction if it touches screen edge."""
-# 	hot_dog.self.hot_dog_direction_factor *= -1
+def ship_hit(bs_settings, stats, screen, ship, hot_dogs):
+	"""Respond to ship being hit by kimchi."""
+	if stats.ships_left > 0:
+		# Decrement ships left.
+		stats.ships_left -= 1
 
-def update_hot_dogs(bs_settings, hot_dogs):
+		# Empty the list of aliens and bullets.
+		hot_dogs.empty()
+		
+
+		# Create a new fleet and center the ship.
+		create_fleet(bs_settings, screen, ship, hot_dogs)
+		ship.center_ship()
+
+		# Pause.
+		sleep(0.5)
+	else:
+		stats.game_active = False
+		pygame.mouse.set_visible(True)
+
+def update_hot_dogs(bs_settings, hot_dogs, ship, screen):
 	"""Check if dog is at screen edge, then update the position of all hot 
 	dogs in the fleet."""
 	check_fleet_edges(bs_settings, hot_dogs)
-	hot_dogs.update()
+	
+	# Check for any hot dogs that player has collied with. 
+	# If so, get rid of hot dog.
+	
+	for hot_dog in pygame.sprite.spritecollide(ship, hot_dogs, 1):
+		# pygame.mixer.Sound.play(chomp_sound)
+		# pygame.mixer.Sound.stop()
+		hot_dog.kill()
 		
+	hot_dogs.update()
+
+
+# def eat_hot_dog(bs_settings, hot_dogs, ship, screen):
+# 	hot_dogs.remove()
+# 		

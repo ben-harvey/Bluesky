@@ -21,5 +21,7 @@ class Settings():
 		self.bullets_allowed = 3
 
 		# Hot dog settings
-		
 		self.hot_dog_speed_factor = 2
+
+		# Kimchi settings
+		self.kimchi_speed_factor = 2

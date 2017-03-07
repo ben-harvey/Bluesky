@@ -6,6 +6,7 @@ import game_functions as gf
 from hot_dog import Hotdog
 from game_stats import GameStats
 from button import Button
+from kimchi import Kimchi
 
 def run_game():
 	# Initialize pygame, settings, and screen object.
@@ -25,19 +26,26 @@ def run_game():
 	# Make a ship, a group of bullets, and a group of hot_dogs.
 	ship = Ship(bs_settings, screen)
 	hot_dogs = Group()
+	kimchis = Kimchi(bs_settings, screen, ship)
 
 	# Create the fleet of hot_dogs.
 	gf.create_fleet(bs_settings, screen, ship, hot_dogs)
 
+	# Create kimchi. 
+
+	gf.create_kimchi(bs_settings, screen, ship, kimchis)
+
+
 	# Start the main loop for the game. 
 	while True: 
-		gf.check_events(bs_settings, screen, stats, play_button, ship, hot_dogs)		
+		gf.check_events(bs_settings, screen, stats, play_button, ship, hot_dogs, kimchis)		
 		
 		if stats.game_active:	
 			ship.update()
 			gf.update_hot_dogs(bs_settings, hot_dogs, ship, screen)
+			gf.update_kimchis(bs_settings, kimchis, ship, screen)
 		
-		gf.update_screen(bs_settings, screen, stats, ship, hot_dogs, play_button)
+		gf.update_screen(bs_settings, screen, stats, ship, hot_dogs, play_button, kimchis)
 
 
 run_game()

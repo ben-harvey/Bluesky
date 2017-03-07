@@ -4,6 +4,8 @@ class Ship():
 
 	def __init__(self, bs_settings, screen):
 		"""Initialize the ship and set its starting position."""
+		centerx = 0
+		centery = 0 
 
 		self.screen = screen
 		self.bs_settings = bs_settings
@@ -19,7 +21,7 @@ class Ship():
 		# Store a decimal value for the ship's center. 
 		self.centerx = float(self.rect.centerx)
 		self.centery = float(self.rect.centery)
-		
+			
 		# Set movement flags.
 		self.moving_right = False
 		self.moving_left = False
@@ -30,7 +32,7 @@ class Ship():
 		"""Center the ship on the screen."""
 		self.center = self.screen_rect.centerx
 		self.center = self.screen_rect.centery
-		
+
 	def update(self):
 		"""Update the ship's position based on movement flags."""
 		# Update the ship's center, not the rect. 

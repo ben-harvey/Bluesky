@@ -3,9 +3,10 @@ import pygame
 from hot_dog import Hotdog
 from random import randint
 from time import sleep
+from kimchi import Kimchi
 
 
-def check_keydown_events(event, bs_settings, ship, stats, screen, hot_dogs):
+def check_keydown_events(event, bs_settings, ship, stats, screen, hot_dogs, kimchis):
 
 	if event.key == pygame.K_RIGHT:
 		ship.moving_right = True
@@ -18,7 +19,7 @@ def check_keydown_events(event, bs_settings, ship, stats, screen, hot_dogs):
 	elif event.key == pygame.K_q:
 			sys.exit()
 	elif event.key == pygame.K_p:
-		start_game(bs_settings, screen, stats, ship, hot_dogs)
+		start_game(bs_settings, screen, stats, ship, hot_dogs, kimchis)
 
 
 def check_keyup_events(event, ship):
@@ -34,28 +35,28 @@ def check_keyup_events(event, ship):
 
 
 
-def check_events(bs_settings, screen, stats, play_button, ship, hot_dogs):
+def check_events(bs_settings, screen, stats, play_button, ship, hot_dogs, kimchis):
 	"""Respond to keypresses and mouse events."""
 	for event in pygame.event.get():
 		if event.type == pygame.QUIT:
 			sys.exit()
 		elif event.type == pygame.KEYDOWN:
-			check_keydown_events(event, bs_settings, ship, stats, screen, hot_dogs)
+			check_keydown_events(event, bs_settings, ship, stats, screen, hot_dogs, kimchis)
 		elif event.type == pygame.KEYUP:
 			check_keyup_events(event, ship)
 		elif event.type == pygame.MOUSEBUTTONDOWN:
 			mouse_x, mouse_y = pygame.mouse.get_pos()
 			check_play_button(bs_settings, screen, stats, play_button, ship, 
-				hot_dogs, mouse_x, mouse_y)
+				hot_dogs, kimchis, mouse_x, mouse_y)
 		
 def check_play_button(bs_settings, screen, stats, play_button, ship, hot_dogs, 
-	 mouse_x, mouse_y):
+	 kimchis, mouse_x, mouse_y):
 	"""Start a new game when the player clicks play."""
 	button_clicked = play_button.rect.collidepoint(mouse_x, mouse_y)
 	if button_clicked and not stats.game_active:
-		start_game(bs_settings, screen, stats, ship, hot_dogs)
+		start_game(bs_settings, screen, stats, ship, hot_dogs, kimchis)
 
-def start_game(bs_settings, screen, stats, ship, hot_dogs):
+def start_game(bs_settings, screen, stats, ship, hot_dogs, kimchis):
 		# Hide the mouse cursor.
 		pygame.mouse.set_visible(False)
 
@@ -65,20 +66,22 @@ def start_game(bs_settings, screen, stats, ship, hot_dogs):
 
 		# Empty the list of aliens. 
 		hot_dogs.empty()
-		
+		kimchis.empty()
 
 		# Create new fleet and center ship.
 		create_fleet(bs_settings, screen, ship, hot_dogs)
+		create_kimchi(bs_settings, screen, ship, kimchis)
 		ship.center_ship()
 
 
-def update_screen(bs_settings, screen, stats, ship, hot_dogs, play_button):
+def update_screen(bs_settings, screen, stats, ship, hot_dogs, play_button, kimchis):
 	"""Update images on the screen and flip to a new screen."""	
 	
 	# Redraw the screen during each pass through the loop. 
 	screen.fill(bs_settings.bg_color)
 	ship.blitme()
 	hot_dogs.draw(screen)
+	kimchis.draw(screen)
 
 	# Draw play button if game is inactive.
 	if not stats.game_active:
@@ -100,11 +103,38 @@ def create_hot_dog(bs_settings, screen, hot_dogs):
 	hot_dog.rect.y = hot_dog.y
 	hot_dogs.add(hot_dog)
 
+def instantiate_kimchi(bs_settings, screen, kimchis, ship):
+	"""Create kimchi and place it in one of the four corners of the screen."""
+	kimchi = Kimchi(bs_settings, screen, ship)
+	kimchi_width = kimchi.rect.width
+	kimchi_height = kimchi.rect.height
+	kimchi_xy = return_a_corner(bs_settings, screen, kimchis)
+	kimchi.x = kimchi_xy[0]
+	kimchi.y = kimchi_xy[1]
+	kimchi.rect.x = kimchi.x
+	kimchi.rect.y = kimchi.y
+	kimchis.add(kimchi)
+
+def return_a_corner(bs_settings, screen, kimchis):
+	"""Pick a random corner of the screen for generating kimchi."""
+	corner = randint(1,4)
+	if corner == 1:
+		return (0, 0)
+	if corner == 2:
+		return (0, bs_settings.screen_height)
+	if corner == 3:
+		return (bs_settings.screen_width, 0)
+	if corner ==4: 
+		return (bs_settings.screen_width, bs_settings.screen_height)
+
 def create_fleet(bs_settings, screen, ship, hot_dogs):
 	"""Create a full fleet of hot_dogs."""
 	# hot_dog = Hotdog(bs_settings, screen)
 	for hot_dog in range(randint(8,15)):	
 		create_hot_dog(bs_settings, screen, hot_dogs) 
+
+def create_kimchi(bs_settings, screen, ship, kimchis):
+	instantiate_kimchi(bs_settings, screen, ship, kimchis)
 
 def check_fleet_edges(bs_settings, hot_dogs):
 	"""Respond if any hot dogs have reached an edge."""
@@ -138,7 +168,7 @@ def update_hot_dogs(bs_settings, hot_dogs, ship, screen):
 	dogs in the fleet."""
 	check_fleet_edges(bs_settings, hot_dogs)
 	
-	# Check for any hot dogs that player has collied with. 
+	# Check for any hot dogs that player has collided with. 
 	# If so, get rid of hot dog.
 	
 	for hot_dog in pygame.sprite.spritecollide(ship, hot_dogs, 1):
@@ -148,7 +178,8 @@ def update_hot_dogs(bs_settings, hot_dogs, ship, screen):
 		
 	hot_dogs.update()
 
+def update_kimchis(bs_settings, kimchis, ship, screen):
+	"""Update position of kimchi."""
 
-# def eat_hot_dog(bs_settings, hot_dogs, ship, screen):
-# 	hot_dogs.remove()
-# 		
+	kimchis.update(ship)
+

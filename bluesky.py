@@ -26,7 +26,7 @@ def run_game():
 	# Make a ship, a group of bullets, and a group of hot_dogs.
 	ship = Ship(bs_settings, screen)
 	hot_dogs = Group()
-	kimchis = Kimchi(bs_settings, screen, ship)
+	kimchis = Group()
 
 	# Create the fleet of hot_dogs.
 	gf.create_fleet(bs_settings, screen, ship, hot_dogs)
@@ -43,7 +43,7 @@ def run_game():
 		if stats.game_active:	
 			ship.update()
 			gf.update_hot_dogs(bs_settings, hot_dogs, ship, screen)
-			gf.update_kimchis(bs_settings, kimchis, ship, screen)
+			gf.update_kimchis(bs_settings, screen, ship, kimchis)
 		
 		gf.update_screen(bs_settings, screen, stats, ship, hot_dogs, play_button, kimchis)
 

@@ -3,9 +3,7 @@ import pygame
 class Ship():
 
 	def __init__(self, bs_settings, screen):
-		"""Initialize the ship and set its starting position."""
-		centerx = 0
-		centery = 0 
+		"""Initialize the ship and set its starting position.""" 
 
 		self.screen = screen
 		self.bs_settings = bs_settings

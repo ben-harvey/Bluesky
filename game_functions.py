@@ -103,7 +103,7 @@ def create_hot_dog(bs_settings, screen, hot_dogs):
 	hot_dog.rect.y = hot_dog.y
 	hot_dogs.add(hot_dog)
 
-def instantiate_kimchi(bs_settings, screen, kimchis, ship):
+def instantiate_kimchi(bs_settings, screen, ship, kimchis):
 	"""Create kimchi and place it in one of the four corners of the screen."""
 	kimchi = Kimchi(bs_settings, screen, ship)
 	kimchi_width = kimchi.rect.width
@@ -124,7 +124,7 @@ def return_a_corner(bs_settings, screen, kimchis):
 		return (0, bs_settings.screen_height)
 	if corner == 3:
 		return (bs_settings.screen_width, 0)
-	if corner ==4: 
+	if corner == 4: 
 		return (bs_settings.screen_width, bs_settings.screen_height)
 
 def create_fleet(bs_settings, screen, ship, hot_dogs):
@@ -178,7 +178,7 @@ def update_hot_dogs(bs_settings, hot_dogs, ship, screen):
 		
 	hot_dogs.update()
 
-def update_kimchis(bs_settings, kimchis, ship, screen):
+def update_kimchis(bs_settings, screen, ship, kimchis):
 	"""Update position of kimchi."""
 
 	kimchis.update(ship)

@@ -69,7 +69,7 @@ def start_game(bs_settings, screen, stats, ship, hot_dogs, kimchis):
 		kimchis.empty()
 
 		# Create new fleet and center ship.
-		create_fleet(bs_settings, screen, ship, hot_dogs)
+		# create_fleet(bs_settings, screen, ship, hot_dogs)
 		create_kimchi(bs_settings, screen, ship, kimchis)
 		ship.center_ship()
 
@@ -127,11 +127,11 @@ def return_a_corner(bs_settings, screen, kimchis):
 	if corner == 4: 
 		return (bs_settings.screen_width, bs_settings.screen_height)
 
-def create_fleet(bs_settings, screen, ship, hot_dogs):
-	"""Create a full fleet of hot_dogs."""
-	# hot_dog = Hotdog(bs_settings, screen)
-	for hot_dog in range(randint(8,15)):	
-		create_hot_dog(bs_settings, screen, hot_dogs) 
+# def create_fleet(bs_settings, screen, ship, hot_dogs):
+# 	"""Create a full fleet of hot_dogs."""
+# 	# hot_dog = Hotdog(bs_settings, screen)
+# 	for hot_dog in range(randint(8,15)):	
+# 		create_hot_dog(bs_settings, screen, hot_dogs) 
 
 def create_kimchi(bs_settings, screen, ship, kimchis):
 	instantiate_kimchi(bs_settings, screen, ship, kimchis)

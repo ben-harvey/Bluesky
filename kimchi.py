@@ -2,7 +2,7 @@ import pygame
 from pygame.sprite import Sprite
 import random
 import math
-from ship import Ship
+# from ship import Ship
 
 class Kimchi(pygame.sprite.Sprite):
 	"""A class to represent kimchi."""
@@ -12,15 +12,11 @@ class Kimchi(pygame.sprite.Sprite):
 		pygame.sprite.Sprite.__init__(self)
 		self.screen = screen
 		self.bs_settings = bs_settings
-		self.ship_rect_x = ship.centerx
-		self.ship_rect_y = ship.centery
+		self.ship = ship
 
 		# Load the kimchi image and set its rect attribute.
 		self.image = pygame.image.load('images/kimchi.bmp')
 		self.rect = self.image.get_rect()
-
-		# # Start each new kimchi near bottom of the screen. 
-		# self.rect.x = self.rect.width
 		
 
 		# Store the kimchi's exact position.
@@ -54,7 +50,7 @@ class Kimchi(pygame.sprite.Sprite):
 		"""Make kimchi chase the player."""
 		
 		# find normalized direction vector (dx, dy) between enemy and player
-		dx, dy = self.rect.x - self.ship_rect.x, self.rect.y - self.ship_rect.y
+		dx, dy = self.rect.x - self.ship.rect.x, self.rect.y - self.ship.rect.y
 		dist = math.hypot(dx, dy)
 		dx, dy = dx / dist, dy / dist
 		# move along this normalized vector towards the player at current speed

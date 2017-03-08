@@ -54,6 +54,7 @@ def check_play_button(bs_settings, screen, stats, play_button, ship, hot_dogs,
 	"""Start a new game when the player clicks play."""
 	button_clicked = play_button.rect.collidepoint(mouse_x, mouse_y)
 	if button_clicked and not stats.game_active:
+		bs_settings.initialize_dynamic_settings()
 		start_game(bs_settings, screen, stats, ship, hot_dogs, kimchis)
 
 def start_game(bs_settings, screen, stats, ship, hot_dogs, kimchis):
@@ -74,7 +75,7 @@ def start_game(bs_settings, screen, stats, ship, hot_dogs, kimchis):
 		ship.center_ship()
 
 
-def update_screen(bs_settings, screen, stats, ship, hot_dogs, play_button, kimchis):
+def update_screen(bs_settings, screen, stats, sb, ship, hot_dogs, play_button, kimchis):
 	"""Update images on the screen and flip to a new screen."""	
 	
 	# Redraw the screen during each pass through the loop. 
@@ -82,6 +83,8 @@ def update_screen(bs_settings, screen, stats, ship, hot_dogs, play_button, kimch
 	ship.blitme()
 	hot_dogs.draw(screen)
 	kimchis.draw(screen)
+	# Draw the score info.
+	sb.show_score()
 
 	# Draw play button if game is inactive.
 	if not stats.game_active:
@@ -150,13 +153,6 @@ def check_fleet_edges(bs_settings, hot_dogs):
 			hot_dog.hot_dog_direction_factor *= -1
 			break
 
-def check_kimchi_edges(bs_settings, kimchis):
-	"""Respond if any hot dogs have reached an edge."""
-	for kimchi in kimchis.sprites():
-		if kimchi.check_edges():
-			kimchi.kimchi_direction_factor *= -1
-			break
-
 def ship_hit(bs_settings, stats, screen, ship, hot_dogs):
 	"""Respond to ship being hit by kimchi."""
 	if stats.ships_left > 0:
@@ -167,7 +163,6 @@ def ship_hit(bs_settings, stats, screen, ship, hot_dogs):
 		hot_dogs.empty()
 		kimchis.empty()
 		
-
 		# Create a new fleet and center the ship.
 		create_hot_dog_fleet(bs_settings, screen, ship, hot_dogs)
 		create_kimchi_fleet(bs_settings, screen, stats, ship, kimchis)
@@ -179,11 +174,15 @@ def ship_hit(bs_settings, stats, screen, ship, hot_dogs):
 		stats.game_active = False
 		pygame.mouse.set_visible(True)
 
-def update_hot_dogs(bs_settings, hot_dogs, ship, screen):
+def update_hot_dogs(bs_settings, screen, stats, sb, ship, hot_dogs, kimchis):
 	"""Check if dog is at screen edge, then update the position of all hot 
 	dogs in the fleet."""
 	check_fleet_edges(bs_settings, hot_dogs)
 	
+	# Check for ship-hot dog collisions.
+	check_ship_hot_dog_collisions(bs_settings, screen, stats, sb, ship,
+	 hot_dogs)
+
 	# Check for any hot dogs that player has collided with. 
 	# If so, get rid of hot dog.
 	
@@ -191,7 +190,14 @@ def update_hot_dogs(bs_settings, hot_dogs, ship, screen):
 		# pygame.mixer.Sound.play(chomp_sound)
 		# pygame.mixer.Sound.stop()
 		hot_dog.kill()
-		
+	
+	if len(hot_dogs) == 0:
+		# Destroy kimchis, speed up game, and create new fleet.
+		kimchis.empty()
+		bs_settings.increase_speed()
+		create_hot_dog_fleet(bs_settings, screen, ship, hot_dogs)
+		create_kimchi_fleet(bs_settings, screen, stats, ship, kimchis)	
+
 	hot_dogs.update()
 
 def update_kimchis(bs_settings, screen, ship, kimchis):
@@ -199,4 +205,16 @@ def update_kimchis(bs_settings, screen, ship, kimchis):
 	in the fleet"""
 	
 	kimchis.update()
+
+def check_ship_hot_dog_collisions(bs_settings, screen, stats, sb, ship,
+	 hot_dogs):
+	"""Respond to hot_dog-ship collisions."""
+	collisions = pygame.sprite.spritecollide(ship, hot_dogs, 1)
+	if collisions:
+		for hot_dogs in collisions:
+			stats.score += bs_settings.hot_dog_points #* len(hot_dogs)
+		sb.prep_score()
+	
+
+	
 

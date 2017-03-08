@@ -7,6 +7,8 @@ from hot_dog import Hotdog
 from game_stats import GameStats
 from button import Button
 from kimchi import Kimchi
+from scoreboard import Scoreboard
+
 
 def run_game():
 	# Initialize pygame, settings, and screen object.
@@ -20,8 +22,9 @@ def run_game():
 	# Make the Play button
 	play_button = Button(bs_settings, screen, 'Play')
 
-	# Create an instance to store stats.
+	# Create an instance to store stats and create scoreboard.
 	stats = GameStats(bs_settings)
+	sb = Scoreboard(bs_settings, screen, stats)
 
 	# Make a ship, a group of bullets, and a group of hot_dogs.
 	ship = Ship(bs_settings, screen)
@@ -41,10 +44,10 @@ def run_game():
 		
 		if stats.game_active:	
 			ship.update()
-			gf.update_hot_dogs(bs_settings, hot_dogs, ship, screen)
+			gf.update_hot_dogs(bs_settings, screen, stats, sb, ship, hot_dogs, kimchis)
 			gf.update_kimchis(bs_settings, screen, ship, kimchis)
 		
-		gf.update_screen(bs_settings, screen, stats, ship, hot_dogs, play_button, kimchis)
+		gf.update_screen(bs_settings, screen, stats, sb, ship, hot_dogs, play_button, kimchis)
 
 
 run_game()

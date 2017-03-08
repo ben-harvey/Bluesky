@@ -5,7 +5,7 @@ class Settings():
 		"""Initialize the game's settings."""
 		
 		# Ship settings
-		self.ship_speed_factor = 10
+		self.ship_speed_factor = 3
 		self.ship_limit = 3
 
 		# Screen settings
@@ -24,4 +24,5 @@ class Settings():
 		self.hot_dog_speed_factor = 2
 
 		# Kimchi settings
-		self.kimchi_speed_factor = 2
+		self.kimchi_speed_factor = -2
+		self.kimchi_number = 2

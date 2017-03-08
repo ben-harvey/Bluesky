@@ -69,8 +69,8 @@ def start_game(bs_settings, screen, stats, ship, hot_dogs, kimchis):
 		kimchis.empty()
 
 		# Create new fleet and center ship.
-		# create_fleet(bs_settings, screen, ship, hot_dogs)
-		create_kimchi(bs_settings, screen, ship, kimchis)
+		create_hot_dog_fleet(bs_settings, screen, ship, hot_dogs)
+		create_kimchi_fleet(bs_settings, screen, stats, ship, kimchis)
 		ship.center_ship()
 
 
@@ -103,44 +103,58 @@ def create_hot_dog(bs_settings, screen, hot_dogs):
 	hot_dog.rect.y = hot_dog.y
 	hot_dogs.add(hot_dog)
 
-def instantiate_kimchi(bs_settings, screen, ship, kimchis):
+def create_kimchi(bs_settings, screen, stats, ship, kimchis):
 	"""Create kimchi and place it in one of the four corners of the screen."""
+	if stats.game_active:
+		kimchi = Kimchi(bs_settings, screen, ship)
+		kimchi_width = kimchi.rect.width
+		kimchi_height = kimchi.rect.height
+		kimchi_xy = return_a_corner(bs_settings, screen, ship, kimchis)
+		kimchi.x = kimchi_xy[0]
+		kimchi.y = kimchi_xy[1]
+		kimchi.rect.x = kimchi.x
+		kimchi.rect.y = kimchi.y
+		kimchis.add(kimchi)
+
+def return_a_corner(bs_settings, screen, ship, kimchis):
+	"""Pick a random corner of the screen for generating kimchi."""
 	kimchi = Kimchi(bs_settings, screen, ship)
 	kimchi_width = kimchi.rect.width
 	kimchi_height = kimchi.rect.height
-	kimchi_xy = return_a_corner(bs_settings, screen, kimchis)
-	kimchi.x = kimchi_xy[0]
-	kimchi.y = kimchi_xy[1]
-	kimchi.rect.x = kimchi.x
-	kimchi.rect.y = kimchi.y
-	kimchis.add(kimchi)
-
-def return_a_corner(bs_settings, screen, kimchis):
-	"""Pick a random corner of the screen for generating kimchi."""
 	corner = randint(1,4)
 	if corner == 1:
 		return (0, 0)
 	if corner == 2:
-		return (0, bs_settings.screen_height)
+		return (0, bs_settings.screen_height - kimchi_height)
 	if corner == 3:
-		return (bs_settings.screen_width, 0)
+		return (bs_settings.screen_width - kimchi_width, 0)
 	if corner == 4: 
-		return (bs_settings.screen_width, bs_settings.screen_height)
+		return (bs_settings.screen_width - kimchi_width, bs_settings.screen_height - kimchi_height)
 
-# def create_fleet(bs_settings, screen, ship, hot_dogs):
-# 	"""Create a full fleet of hot_dogs."""
-# 	# hot_dog = Hotdog(bs_settings, screen)
-# 	for hot_dog in range(randint(8,15)):	
-# 		create_hot_dog(bs_settings, screen, hot_dogs) 
+def create_hot_dog_fleet(bs_settings, screen, ship, hot_dogs):
+	"""Create a full fleet of hot_dogs."""
+	# hot_dog = Hotdog(bs_settings, screen)
+	for hot_dog in range(randint(8,15)):	
+		create_hot_dog(bs_settings, screen, hot_dogs) 
 
-def create_kimchi(bs_settings, screen, ship, kimchis):
-	instantiate_kimchi(bs_settings, screen, ship, kimchis)
+def create_kimchi_fleet(bs_settings, screen, stats, ship, kimchis):
+	"""Create a full fleet of kimchi."""
+	kimchi = Kimchi(bs_settings, screen, ship)
+	for kimchi in range(bs_settings.kimchi_number):	
+		create_kimchi(bs_settings, screen, stats, ship, kimchis) 
 
 def check_fleet_edges(bs_settings, hot_dogs):
 	"""Respond if any hot dogs have reached an edge."""
 	for hot_dog in hot_dogs.sprites():
 		if hot_dog.check_edges():
 			hot_dog.hot_dog_direction_factor *= -1
+			break
+
+def check_kimchi_edges(bs_settings, kimchis):
+	"""Respond if any hot dogs have reached an edge."""
+	for kimchi in kimchis.sprites():
+		if kimchi.check_edges():
+			kimchi.kimchi_direction_factor *= -1
 			break
 
 def ship_hit(bs_settings, stats, screen, ship, hot_dogs):
@@ -151,10 +165,12 @@ def ship_hit(bs_settings, stats, screen, ship, hot_dogs):
 
 		# Empty the list of aliens and bullets.
 		hot_dogs.empty()
+		kimchis.empty()
 		
 
 		# Create a new fleet and center the ship.
-		create_fleet(bs_settings, screen, ship, hot_dogs)
+		create_hot_dog_fleet(bs_settings, screen, ship, hot_dogs)
+		create_kimchi_fleet(bs_settings, screen, stats, ship, kimchis)
 		ship.center_ship()
 
 		# Pause.
@@ -179,7 +195,8 @@ def update_hot_dogs(bs_settings, hot_dogs, ship, screen):
 	hot_dogs.update()
 
 def update_kimchis(bs_settings, screen, ship, kimchis):
-	"""Update position of kimchi."""
-
-	kimchis.update(ship)
+	"""Update the position of all kimchi
+	in the fleet"""
+	
+	kimchis.update()
 

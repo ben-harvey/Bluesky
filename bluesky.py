@@ -28,12 +28,11 @@ def run_game():
 	hot_dogs = Group()
 	kimchis = Group()
 
-	# # Create the fleet of hot_dogs.
-	# gf.create_fleet(bs_settings, screen, ship, hot_dogs)
+	# Create the fleet of hot_dogs.
+	gf.create_hot_dog_fleet(bs_settings, screen, ship, hot_dogs)
 
 	# Create kimchi. 
-
-	gf.create_kimchi(bs_settings, screen, ship, kimchis)
+	gf.create_kimchi_fleet(bs_settings, screen, stats, ship, kimchis)
 
 
 	# Start the main loop for the game. 

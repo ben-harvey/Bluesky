@@ -13,7 +13,8 @@ from scoreboard import Scoreboard
 def run_game():
 	# Initialize pygame, settings, and screen object.
 	pygame.init()
-	# pygame.mixer.pre_init(44100, -16, 2, 2048)
+	pygame.mixer.pre_init(44100, -16, 2, 2048)
+	
 	bs_settings = Settings()
 	screen = pygame.display.set_mode(
 		(bs_settings.screen_width, bs_settings.screen_height))
@@ -45,7 +46,7 @@ def run_game():
 		if stats.game_active:	
 			ship.update()
 			gf.update_hot_dogs(bs_settings, screen, stats, sb, ship, hot_dogs, kimchis)
-			gf.update_kimchis(bs_settings, screen, ship, kimchis)
+			gf.update_kimchis(bs_settings, screen, stats, sb, ship, kimchis, hot_dogs)
 		
 		gf.update_screen(bs_settings, screen, stats, sb, ship, hot_dogs, play_button, kimchis)
 

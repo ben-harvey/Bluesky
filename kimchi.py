@@ -45,8 +45,10 @@ class Kimchi(pygame.sprite.Sprite):
 
 		# find normalized direction vector (dx, dy) between enemy and player
 		dx, dy = self.rect.x - self.ship.rect.x, self.rect.y - self.ship.rect.y
+		
 		dist = math.hypot(dx, dy)
-		dx, dy = dx / dist, dy / dist
+		dx, dy = (dx / dist) * -2, (dy / dist) * -2
+		
 		# move along this normalized vector towards the player at current speed
 		self.rect.x += dx * self.bs_settings.kimchi_speed_factor
 		self.rect.y += dy * self.bs_settings.kimchi_speed_factor

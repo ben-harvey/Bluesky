@@ -73,7 +73,10 @@ def start_game(bs_settings, screen, stats, ship, hot_dogs, kimchis):
 		create_hot_dog_fleet(bs_settings, screen, ship, hot_dogs)
 		create_kimchi_fleet(bs_settings, screen, stats, ship, kimchis)
 		ship.center_ship()
-
+		
+		# Play music
+		pygame.mixer.music.load('vivaldi.wav')
+		pygame.mixer.music.play(-1)
 
 def update_screen(bs_settings, screen, stats, sb, ship, hot_dogs, play_button, kimchis):
 	"""Update images on the screen and flip to a new screen."""	
@@ -136,7 +139,6 @@ def return_a_corner(bs_settings, screen, ship, kimchis):
 
 def create_hot_dog_fleet(bs_settings, screen, ship, hot_dogs):
 	"""Create a full fleet of hot_dogs."""
-	# hot_dog = Hotdog(bs_settings, screen)
 	for hot_dog in range(randint(8,15)):	
 		create_hot_dog(bs_settings, screen, hot_dogs) 
 
@@ -153,7 +155,20 @@ def check_fleet_edges(bs_settings, hot_dogs):
 			hot_dog.hot_dog_direction_factor *= -1
 			break
 
-def ship_hit(bs_settings, stats, screen, ship, hot_dogs):
+def check_ship_kimchi_collisions(bs_settings, screen, stats, sb, ship,
+	 kimchis, hot_dogs):
+	"""Respond to kimchi-ship collisions."""
+	collisions = pygame.sprite.spritecollide(ship, kimchis, 1)
+	if collisions:
+		play_scream(bs_settings, screen, stats, sb, ship,
+	 		kimchis, hot_dogs)
+		ship_hit(bs_settings, stats, screen, ship, kimchis, hot_dogs)
+
+
+		
+
+
+def ship_hit(bs_settings, stats, screen, ship, kimchis, hot_dogs):
 	"""Respond to ship being hit by kimchi."""
 	if stats.ships_left > 0:
 		# Decrement ships left.
@@ -187,8 +202,7 @@ def update_hot_dogs(bs_settings, screen, stats, sb, ship, hot_dogs, kimchis):
 	# If so, get rid of hot dog.
 	
 	for hot_dog in pygame.sprite.spritecollide(ship, hot_dogs, 1):
-		# pygame.mixer.Sound.play(chomp_sound)
-		# pygame.mixer.Sound.stop()
+		
 		hot_dog.kill()
 	
 	if len(hot_dogs) == 0:
@@ -200,19 +214,38 @@ def update_hot_dogs(bs_settings, screen, stats, sb, ship, hot_dogs, kimchis):
 
 	hot_dogs.update()
 
-def update_kimchis(bs_settings, screen, ship, kimchis):
+def update_kimchis(bs_settings, screen, stats, sb, ship, kimchis, hot_dogs):
 	"""Update the position of all kimchi
 	in the fleet"""
-	
+	check_ship_kimchi_collisions(bs_settings, screen, stats, sb, ship,
+	 kimchis, hot_dogs)
+
 	kimchis.update()
+
+def play_chomp(bs_settings, screen, stats, sb, ship,
+	 hot_dogs):
+	"""Play chomp sound."""
+	if stats.game_active:
+		chomp_sound = pygame.mixer.Sound('chomp.wav')
+		chomp_sound.play()
+
+def play_scream(bs_settings, screen, stats, sb, ship,
+	 kimchis, hot_dogs):
+	"""Play chomp sound."""
+	if stats.game_active:
+		scream_sound = pygame.mixer.Sound('scream.wav')
+		scream_sound.play()
+
 
 def check_ship_hot_dog_collisions(bs_settings, screen, stats, sb, ship,
 	 hot_dogs):
 	"""Respond to hot_dog-ship collisions."""
 	collisions = pygame.sprite.spritecollide(ship, hot_dogs, 1)
 	if collisions:
+		play_chomp(bs_settings, screen, stats, sb, ship,
+	 hot_dogs)
 		for hot_dogs in collisions:
-			stats.score += bs_settings.hot_dog_points #* len(hot_dogs)
+			stats.score += bs_settings.hot_dog_points 
 		sb.prep_score()
 	
 

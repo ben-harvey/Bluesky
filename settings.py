@@ -19,13 +19,13 @@ class Settings():
 	def initialize_dynamic_settings(self):
 		"""Initialize setting that change throughout the game."""
 		# Ship settings
-		self.ship_speed_factor = 10
+		self.ship_speed_factor = 4
 		
 		# Hot dog settings
 		self.hot_dog_speed_factor = 1
 		
 		# Kimchi settings
-		self.kimchi_speed_factor = -2
+		self.kimchi_speed_factor = 1
 		self.kimchi_number = 1
 		
 		# Scoring

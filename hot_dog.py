@@ -75,3 +75,15 @@ class Hotdog(pygame.sprite.Sprite):
 		self.rect.x = self.x 
 		self.rect.y = self.y 
 		
+
+	def kill_offscreen(self):
+		"""Kill hot dogs that wander off screen."""
+		screen_rect = self.screen.get_rect()
+		if self.rect.left >= screen_rect.right:
+			return True
+		elif self.rect.right <= 0:
+			return True
+		elif self.rect.bottom <= 0:
+			return True
+		elif self.rect.top >= screen_rect.bottom:
+			return True

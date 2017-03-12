@@ -21,7 +21,6 @@ def check_keydown_events(event, bs_settings, ship, stats, screen, sb, hot_dogs, 
 	elif event.key == pygame.K_p:
 		start_game(bs_settings, screen, stats, ship, sb, hot_dogs, kimchis)
 
-
 def check_keyup_events(event, ship):
 
 	if event.key == pygame.K_RIGHT:
@@ -32,8 +31,6 @@ def check_keyup_events(event, ship):
 		ship.moving_up = False
 	elif event.key == pygame.K_DOWN:
 		ship.moving_down = False
-
-
 
 def check_events(bs_settings, screen, stats, play_button, ship, sb, hot_dogs, kimchis):
 	"""Respond to keypresses and mouse events."""
@@ -54,7 +51,7 @@ def check_play_button(bs_settings, screen, stats, play_button, ship, sb, hot_dog
 	"""Start a new game when the player clicks play."""
 	button_clicked = play_button.rect.collidepoint(mouse_x, mouse_y)
 	if button_clicked and not stats.game_active:
-		bs_settings.initialize_dynamic_settings()
+		
 		start_game(bs_settings, screen, stats, ship, hot_dogs, kimchis)
 
 def start_game(bs_settings, screen, stats, ship, sb, hot_dogs, kimchis):
@@ -64,6 +61,9 @@ def start_game(bs_settings, screen, stats, ship, sb, hot_dogs, kimchis):
 		# Reset the game stats.
 		stats.reset_stats()
 		stats.game_active = True
+
+		# Reset dynamic settings.
+		bs_settings.initialize_dynamic_settings()
 
 		# Empty the list of aliens. 
 		hot_dogs.empty()
@@ -85,7 +85,7 @@ def start_game(bs_settings, screen, stats, ship, sb, hot_dogs, kimchis):
 		sb.prep_score()
 		sb.prep_high_score()
 		sb.prep_level()
-		#sb.prep_ships()
+		sb.prep_ships()
 
 def update_screen(bs_settings, screen, stats, sb, ship, hot_dogs, play_button, kimchis):
 	"""Update images on the screen and flip to a new screen."""	
@@ -164,6 +164,14 @@ def check_fleet_edges(bs_settings, hot_dogs):
 			hot_dog.hot_dog_direction_factor *= -1
 			break
 
+def kill_offscreen_dogs(bs_settings, hot_dogs):
+	"""Respond if any hot dogs have reached an edge."""
+	for hot_dog in hot_dogs.sprites():
+		if hot_dog.kill_offscreen():
+			hot_dog.kill()
+			break
+
+
 def check_ship_kimchi_collisions(bs_settings, screen, stats, sb, ship,
 	 kimchis, hot_dogs):
 	"""Respond to kimchi-ship collisions."""
@@ -171,17 +179,17 @@ def check_ship_kimchi_collisions(bs_settings, screen, stats, sb, ship,
 	if collisions:
 		play_scream(bs_settings, screen, stats, sb, ship,
 	 		kimchis, hot_dogs)
-		ship_hit(bs_settings, stats, screen, ship, kimchis, hot_dogs)
+		ship_hit(bs_settings, stats, screen, ship, sb, kimchis, hot_dogs)
 
 
-		
-
-
-def ship_hit(bs_settings, stats, screen, ship, kimchis, hot_dogs):
+def ship_hit(bs_settings, stats, screen, ship, sb, kimchis, hot_dogs):
 	"""Respond to ship being hit by kimchi."""
 	if stats.ships_left > 0:
 		# Decrement ships left.
 		stats.ships_left -= 1
+
+		# Update scoreboard
+		sb.prep_ships()
 
 		# Empty the list of aliens and bullets.
 		hot_dogs.empty()
@@ -206,6 +214,9 @@ def update_hot_dogs(bs_settings, screen, stats, sb, ship, hot_dogs, kimchis):
 	dogs in the fleet."""
 	check_fleet_edges(bs_settings, hot_dogs)
 	
+	# Kill offscreen hot dogs. 
+	kill_offscreen_dogs(bs_settings, hot_dogs)
+
 	# Check for ship-hot dog collisions.
 	check_ship_hot_dog_collisions(bs_settings, screen, stats, sb, ship,
 	 hot_dogs)
@@ -228,6 +239,9 @@ def update_hot_dogs(bs_settings, screen, stats, sb, ship, hot_dogs, kimchis):
 		stats.level += 1 
 		sb.prep_level()
 
+		# Play burp sound.
+		play_burp(bs_settings, screen, stats, sb, ship, hot_dogs)
+
 		# Create random background color. 
 		bs_settings.random_bg()
 
@@ -247,6 +261,13 @@ def play_chomp(bs_settings, screen, stats, sb, ship,
 	if stats.game_active:
 		chomp_sound = pygame.mixer.Sound('chomp.wav')
 		chomp_sound.play()
+
+def play_burp(bs_settings, screen, stats, sb, ship,
+	 hot_dogs):
+	"""Play burp sound."""
+	if stats.game_active:
+		burp_sound = pygame.mixer.Sound('burp.wav')
+		burp_sound.play()
 
 def play_scream(bs_settings, screen, stats, sb, ship,
 	 kimchis, hot_dogs):

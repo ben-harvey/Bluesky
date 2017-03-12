@@ -7,21 +7,23 @@ class Settings():
 		"""Initialize the game's settings."""
 		# Ship settings
 		self.ship_limit = 3
+		
+		
 
 		# Screen settings
 		self.screen_width = 1200
 		self.screen_height = 800
-		#self.bg_color = (255, 255, 255)
-
+		
 		# How quickly the game speeds up
 		self.speedup_scale = 1.1
+		self.score_scale = 1.3
 
 		self.initialize_dynamic_settings()
 
 	def initialize_dynamic_settings(self):
 		"""Initialize setting that change throughout the game."""
 		# Ship settings
-		self.ship_speed_factor = 4
+		self.ship_speed_factor = 3
 		
 		# Hot dog settings
 		self.hot_dog_speed_factor = 1
@@ -32,6 +34,7 @@ class Settings():
 		
 		# Scoring
 		self.hot_dog_points = 50
+		
 
 		# Background color
 		self.bg_color = ()
@@ -43,6 +46,9 @@ class Settings():
 		self.ship_speed_factor *= self.speedup_scale
 		self.hot_dog_speed_factor *= self.speedup_scale
 		self.kimchi_speed_factor *= self.speedup_scale
+
+		self.hot_dog_points = int(self.hot_dog_points * self.score_scale)
+		
 
 	def random_bg(self):
 		"""Define random background color."""

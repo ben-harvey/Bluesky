@@ -38,7 +38,10 @@ def run_game():
 	# Create kimchi. 
 	gf.create_kimchi_fleet(bs_settings, screen, stats, ship, kimchis)
 
+
 	bs_settings.random_bg()
+
+	
 
 	# Start the main loop for the game. 
 	while True: 

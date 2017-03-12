@@ -6,7 +6,7 @@ from time import sleep
 from kimchi import Kimchi
 
 
-def check_keydown_events(event, bs_settings, ship, stats, screen, hot_dogs, kimchis):
+def check_keydown_events(event, bs_settings, ship, stats, screen, sb, hot_dogs, kimchis):
 
 	if event.key == pygame.K_RIGHT:
 		ship.moving_right = True
@@ -19,7 +19,7 @@ def check_keydown_events(event, bs_settings, ship, stats, screen, hot_dogs, kimc
 	elif event.key == pygame.K_q:
 			sys.exit()
 	elif event.key == pygame.K_p:
-		start_game(bs_settings, screen, stats, ship, hot_dogs, kimchis)
+		start_game(bs_settings, screen, stats, ship, sb, hot_dogs, kimchis)
 
 
 def check_keyup_events(event, ship):
@@ -35,18 +35,18 @@ def check_keyup_events(event, ship):
 
 
 
-def check_events(bs_settings, screen, stats, play_button, ship, hot_dogs, kimchis):
+def check_events(bs_settings, screen, stats, play_button, ship, sb, hot_dogs, kimchis):
 	"""Respond to keypresses and mouse events."""
 	for event in pygame.event.get():
 		if event.type == pygame.QUIT:
 			sys.exit()
 		elif event.type == pygame.KEYDOWN:
-			check_keydown_events(event, bs_settings, ship, stats, screen, hot_dogs, kimchis)
+			check_keydown_events(event, bs_settings, ship, stats, screen, sb, hot_dogs, kimchis)
 		elif event.type == pygame.KEYUP:
 			check_keyup_events(event, ship)
 		elif event.type == pygame.MOUSEBUTTONDOWN:
 			mouse_x, mouse_y = pygame.mouse.get_pos()
-			check_play_button(bs_settings, screen, stats, play_button, ship, 
+			check_play_button(bs_settings, screen, stats, play_button, sb, ship, 
 				hot_dogs, kimchis, mouse_x, mouse_y)
 		
 def check_play_button(bs_settings, screen, stats, play_button, ship, sb, hot_dogs, 
@@ -85,7 +85,7 @@ def start_game(bs_settings, screen, stats, ship, sb, hot_dogs, kimchis):
 		sb.prep_score()
 		sb.prep_high_score()
 		sb.prep_level()
-		sb.prep_ships()
+		#sb.prep_ships()
 
 def update_screen(bs_settings, screen, stats, sb, ship, hot_dogs, play_button, kimchis):
 	"""Update images on the screen and flip to a new screen."""	

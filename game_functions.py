@@ -49,7 +49,7 @@ def check_events(bs_settings, screen, stats, play_button, ship, hot_dogs, kimchi
 			check_play_button(bs_settings, screen, stats, play_button, ship, 
 				hot_dogs, kimchis, mouse_x, mouse_y)
 		
-def check_play_button(bs_settings, screen, stats, play_button, ship, hot_dogs, 
+def check_play_button(bs_settings, screen, stats, play_button, ship, sb, hot_dogs, 
 	 kimchis, mouse_x, mouse_y):
 	"""Start a new game when the player clicks play."""
 	button_clicked = play_button.rect.collidepoint(mouse_x, mouse_y)
@@ -57,7 +57,7 @@ def check_play_button(bs_settings, screen, stats, play_button, ship, hot_dogs,
 		bs_settings.initialize_dynamic_settings()
 		start_game(bs_settings, screen, stats, ship, hot_dogs, kimchis)
 
-def start_game(bs_settings, screen, stats, ship, hot_dogs, kimchis):
+def start_game(bs_settings, screen, stats, ship, sb, hot_dogs, kimchis):
 		# Hide the mouse cursor.
 		pygame.mouse.set_visible(False)
 
@@ -80,6 +80,12 @@ def start_game(bs_settings, screen, stats, ship, hot_dogs, kimchis):
 
 		# Create random background color. 
 		bs_settings.random_bg()
+
+		# Reset scoreboard
+		sb.prep_score()
+		sb.prep_high_score()
+		sb.prep_level()
+		sb.prep_ships()
 
 def update_screen(bs_settings, screen, stats, sb, ship, hot_dogs, play_button, kimchis):
 	"""Update images on the screen and flip to a new screen."""	
@@ -218,6 +224,10 @@ def update_hot_dogs(bs_settings, screen, stats, sb, ship, hot_dogs, kimchis):
 		create_hot_dog_fleet(bs_settings, screen, ship, hot_dogs)
 		create_kimchi_fleet(bs_settings, screen, stats, ship, kimchis)	
 
+		# Increase level
+		stats.level += 1 
+		sb.prep_level()
+
 		# Create random background color. 
 		bs_settings.random_bg()
 
@@ -258,7 +268,7 @@ def check_ship_hot_dog_collisions(bs_settings, screen, stats, sb, ship,
 			sb.prep_score()
 		check_high_score(stats, sb)
 
-		
+
 def check_high_score(stats, sb):
 	"""Check to see if there's a new high score."""
 	if stats.score > stats.high_score:

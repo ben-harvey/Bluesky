@@ -255,8 +255,14 @@ def check_ship_hot_dog_collisions(bs_settings, screen, stats, sb, ship,
 	 hot_dogs)
 		for hot_dogs in collisions:
 			stats.score += bs_settings.hot_dog_points 
-		sb.prep_score()
-	
+			sb.prep_score()
+		check_high_score(stats, sb)
 
+		
+def check_high_score(stats, sb):
+	"""Check to see if there's a new high score."""
+	if stats.score > stats.high_score:
+		stats.high_score = stats.score
+		sb.prep_high_score()
 	
 

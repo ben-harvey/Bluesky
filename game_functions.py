@@ -78,6 +78,9 @@ def start_game(bs_settings, screen, stats, ship, hot_dogs, kimchis):
 		pygame.mixer.music.load('vivaldi.wav')
 		pygame.mixer.music.play(-1)
 
+		# Create random background color. 
+		bs_settings.random_bg()
+
 def update_screen(bs_settings, screen, stats, sb, ship, hot_dogs, play_button, kimchis):
 	"""Update images on the screen and flip to a new screen."""	
 	
@@ -183,6 +186,9 @@ def ship_hit(bs_settings, stats, screen, ship, kimchis, hot_dogs):
 		create_kimchi_fleet(bs_settings, screen, stats, ship, kimchis)
 		ship.center_ship()
 
+		# Create random background color. 
+		bs_settings.random_bg()
+		
 		# Pause.
 		sleep(0.5)
 	else:
@@ -211,6 +217,9 @@ def update_hot_dogs(bs_settings, screen, stats, sb, ship, hot_dogs, kimchis):
 		bs_settings.increase_speed()
 		create_hot_dog_fleet(bs_settings, screen, ship, hot_dogs)
 		create_kimchi_fleet(bs_settings, screen, stats, ship, kimchis)	
+
+		# Create random background color. 
+		bs_settings.random_bg()
 
 	hot_dogs.update()
 

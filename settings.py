@@ -1,3 +1,5 @@
+from random import randint
+
 class Settings():
 	"""A class to store all settings for Blue Sky"""
 
@@ -9,7 +11,7 @@ class Settings():
 		# Screen settings
 		self.screen_width = 1200
 		self.screen_height = 800
-		self.bg_color = (255, 255, 255)
+		#self.bg_color = (255, 255, 255)
 
 		# How quickly the game speeds up
 		self.speedup_scale = 1.1
@@ -31,8 +33,21 @@ class Settings():
 		# Scoring
 		self.hot_dog_points = 50
 
+		# Background color
+		self.bg_color = ()
+
+		
+
 	def increase_speed(self):
 		"""Increase speed settings."""
 		self.ship_speed_factor *= self.speedup_scale
 		self.hot_dog_speed_factor *= self.speedup_scale
 		self.kimchi_speed_factor *= self.speedup_scale
+
+	def random_bg(self):
+		"""Define random background color."""
+		self.r = randint(0, 255)
+		self.g = randint(0, 255)
+		self.b = randint(0, 255)
+		self.bg_color = (self.r, self.g, self.b)
+		self.bg_color = tuple(self.bg_color)

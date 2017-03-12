@@ -14,7 +14,7 @@ class Kimchi(pygame.sprite.Sprite):
 		self.ship = ship
 
 		# Load the kimchi image and set its rect attribute.
-		self.image = pygame.image.load('images/kimchi.bmp')
+		self.image = pygame.image.load('images/kimchi_t.png')
 		self.rect = self.image.get_rect()
 		
 

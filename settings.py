@@ -29,7 +29,7 @@ class Settings():
 		self.hot_dog_speed_factor = 1
 		
 		# Kimchi settings
-		self.kimchi_speed_factor = 1
+		self.kimchi_speed_factor = 0.9
 		self.kimchi_number = 1
 		
 		# Scoring

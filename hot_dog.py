@@ -46,7 +46,6 @@ class Hotdog(pygame.sprite.Sprite):
 		elif self.rect.bottom >= screen_rect.bottom:
 			return True
 
-
 	def update(self):
 		"""Move the hot dog."""
 		self.speed = self.bs_settings.hot_dog_speed_factor 
@@ -75,7 +74,6 @@ class Hotdog(pygame.sprite.Sprite):
 		self.rect.x = self.x 
 		self.rect.y = self.y 
 		
-
 	def kill_offscreen(self):
 		"""Kill hot dogs that wander off screen."""
 		screen_rect = self.screen.get_rect()

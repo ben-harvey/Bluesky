@@ -22,23 +22,9 @@ class Kimchi(pygame.sprite.Sprite):
 		self.x = float(self.rect.x)
 		self.y = float(self.rect.y)
 		
-
 	def blitme(self):
 		"""Draw the kimchi at its current location."""
 		self.screen.blit(self.image, self.rect)
-
-	# def check_edges(self):
-	# 	"""Return True if kimchi is at edge of screen."""
-	# 	screen_rect = self.screen.get_rect()
-	# 	if self.rect.right >= screen_rect.right:
-	# 		return True
-	# 	elif self.rect.left <= 0:
-	# 		return True
-	# 	elif self.rect.top <= 0:
-	# 		return True
-	# 	elif self.rect.bottom >= screen_rect.bottom:
-	# 		return True
-
 
 	def update(self):  #ship
 		"""Make kimchi chase the player."""

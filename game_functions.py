@@ -4,10 +4,10 @@ from hot_dog import Hotdog
 from random import randint
 from time import sleep
 from kimchi import Kimchi
-
+import json
 
 def check_keydown_events(event, bs_settings, ship, stats, screen, sb, hot_dogs, kimchis):
-
+	"""Check keydown events."""
 	if event.key == pygame.K_RIGHT:
 		ship.moving_right = True
 	elif event.key == pygame.K_LEFT:
@@ -17,12 +17,12 @@ def check_keydown_events(event, bs_settings, ship, stats, screen, sb, hot_dogs, 
 	elif event.key == pygame.K_DOWN:
 		ship.moving_down = True
 	elif event.key == pygame.K_q:
-			sys.exit()
+		sys.exit()
 	elif event.key == pygame.K_p:
 		start_game(bs_settings, screen, stats, ship, sb, hot_dogs, kimchis)
 
 def check_keyup_events(event, ship):
-
+	"""Check keyup events."""
 	if event.key == pygame.K_RIGHT:
 		ship.moving_right = False
 	elif event.key == pygame.K_LEFT:
@@ -75,7 +75,7 @@ def start_game(bs_settings, screen, stats, ship, sb, hot_dogs, kimchis):
 		ship.center_ship()
 		
 		# Play music
-		pygame.mixer.music.load('vivaldi.wav')
+		pygame.mixer.music.load('sounds/vivaldi.wav')
 		pygame.mixer.music.play(-1)
 
 		# Create random background color. 
@@ -89,7 +89,6 @@ def start_game(bs_settings, screen, stats, ship, sb, hot_dogs, kimchis):
 
 def update_screen(bs_settings, screen, stats, sb, ship, hot_dogs, play_button, kimchis):
 	"""Update images on the screen and flip to a new screen."""	
-	
 	# Redraw the screen during each pass through the loop. 
 	screen.fill(bs_settings.bg_color)
 	ship.blitme()
@@ -171,7 +170,6 @@ def kill_offscreen_dogs(bs_settings, hot_dogs):
 			hot_dog.kill()
 			break
 
-
 def check_ship_kimchi_collisions(bs_settings, screen, stats, sb, ship,
 	 kimchis, hot_dogs):
 	"""Respond to kimchi-ship collisions."""
@@ -206,6 +204,10 @@ def ship_hit(bs_settings, stats, screen, ship, sb, kimchis, hot_dogs):
 		# Pause.
 		sleep(0.5)
 	else:
+		hs_stats = stats.high_score
+		filename = 'high_score.json'
+		with open(filename, 'w') as f_obj:
+			json.dump(hs_stats, f_obj)
 		stats.game_active = False
 		pygame.mouse.set_visible(True)
 
@@ -225,7 +227,6 @@ def update_hot_dogs(bs_settings, screen, stats, sb, ship, hot_dogs, kimchis):
 	# If so, get rid of hot dog.
 	
 	for hot_dog in pygame.sprite.spritecollide(ship, hot_dogs, 1):
-		
 		hot_dog.kill()
 	
 	if len(hot_dogs) == 0:
@@ -259,23 +260,22 @@ def play_chomp(bs_settings, screen, stats, sb, ship,
 	 hot_dogs):
 	"""Play chomp sound."""
 	if stats.game_active:
-		chomp_sound = pygame.mixer.Sound('chomp.wav')
+		chomp_sound = pygame.mixer.Sound('sounds/chomp.wav')
 		chomp_sound.play()
 
 def play_burp(bs_settings, screen, stats, sb, ship,
 	 hot_dogs):
 	"""Play burp sound."""
 	if stats.game_active:
-		burp_sound = pygame.mixer.Sound('burp.wav')
+		burp_sound = pygame.mixer.Sound('sounds/burp.wav')
 		burp_sound.play()
 
 def play_scream(bs_settings, screen, stats, sb, ship,
 	 kimchis, hot_dogs):
 	"""Play chomp sound."""
 	if stats.game_active:
-		scream_sound = pygame.mixer.Sound('scream.wav')
+		scream_sound = pygame.mixer.Sound('sounds/scream.wav')
 		scream_sound.play()
-
 
 def check_ship_hot_dog_collisions(bs_settings, screen, stats, sb, ship,
 	 hot_dogs):
@@ -288,7 +288,6 @@ def check_ship_hot_dog_collisions(bs_settings, screen, stats, sb, ship,
 			stats.score += bs_settings.hot_dog_points 
 			sb.prep_score()
 		check_high_score(stats, sb)
-
 
 def check_high_score(stats, sb):
 	"""Check to see if there's a new high score."""
